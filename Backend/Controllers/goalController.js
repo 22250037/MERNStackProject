@@ -6,7 +6,7 @@ const { use } = require('../Routes/goalRoutes')
 //route = GET /api/goals
 //access = private
 const getGoals = asyncHandler(async (req, res) => {
-    const goals = await Goal.find({user: req.user.id})
+    const goals = await Goal.find({user: req.User.id})
     res.status(200).json(goals)
 })
 
@@ -21,7 +21,7 @@ const setGoals = asyncHandler(async (req, res) => {
 
     const goal = await Goal.create({
         text: req.body.text,
-        user: req.user.id
+        user: req.User.id
     })
     res.status(200).json(goal)
 })
@@ -39,16 +39,16 @@ if(!goal){
     throw new Error('Goal Not Found')
 }
 
-const user = await Goal.findByIdAndUpdate(req.user.id)
+//const user = await Goal.findByIdAndUpdate(req.user.id)
 
 //Check user
-if(!user){
+if(!User){
     res.status(401)
     throw new Error('User not found')
 }
 
 //Check if login user matches goal user
-if(goal.user.toString() != user.id){
+if(goal.User.toString() !== req.User.id){
     res.status(401)
     throw new Error('User not Authorized')
 }
